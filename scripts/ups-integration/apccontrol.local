@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# Custom UPS event hooks for Lightning node
+# Called by apcupsd daemon on power events
+#
+# INSTALL:
+#   sudo cp apccontrol.local /etc/apcupsd/
+#   sudo chmod +x /etc/apcupsd/apccontrol.local
+#
+# This script is called by apcupsd with the event name as $1
+# It integrates with lightning-shutdown.sh for graceful shutdown
+
+LOGFILE="/var/log/ups-events.log"
+SHUTDOWN_SCRIPT="/usr/local/bin/lightning-shutdown.sh"
+
+# Logging function
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOGFILE"
+}
+
+# Ensure log file exists
+mkdir -p "$(dirname "$LOGFILE")"
+touch "$LOGFILE"
+
+case "$1" in
+    # CRITICAL: Battery is critical - must shutdown NOW
+    doshutdown)
+        log "CRITICAL: Battery critical - initiating Lightning-safe shutdown"
+        if [ -x "$SHUTDOWN_SCRIPT" ]; then
+            "$SHUTDOWN_SCRIPT" "UPS Battery Critical"
+        else
+            log "ERROR: Shutdown script not found at $SHUTDOWN_SCRIPT"
+            # Fallback to basic shutdown
+            /sbin/shutdown -h now "UPS battery critical"
+        fi
+        ;;
+
+    # Power failure detected (initial event)
+    powerout)
+        log "ALERT: Power failure detected - now on battery"
+        # Optional: Send notification (email, SMS, etc.)
+        # /usr/local/bin/notify.sh "Power failure at $(hostname)"
+        ;;
+
+    # Now running on battery power
+    onbattery)
+        log "WARNING: Running on battery power"
+        # Optional: Disable non-essential services to extend runtime
+        ;;
+
+    # Power has been restored
+    offbattery)
+        log "INFO: Power restored - back on mains power"
+        # Optional: Re-enable services that were disabled
+        ;;
+
+    # Mains power has returned (alternate event)
+    mainsback)
+        log "INFO: Mains power has returned"
+        ;;
+
+    # UPS battery is failing/needs replacement
+    failing)
+        log "CRITICAL: UPS battery is failing - replace soon!"
+        # Optional: Send urgent notification
+        ;;
+
+    # UPS timeout reached
+    timeout)
+        log "ALERT: UPS timeout reached"
+        ;;
+
+    # UPS load limit reached
+    loadlimit)
+        log "WARNING: UPS load limit reached - reduce load"
+        ;;
+
+    # UPS runtime limit reached
+    runlimit)
+        log "WARNING: UPS runtime limit reached"
+        ;;
+
+    # Battery level is low (but not critical yet)
+    battlow)
+        log "WARNING: Battery level is low"
+        ;;
+
+    # Battery has been disconnected
+    battdetach)
+        log "ALERT: Battery has been disconnected"
+        ;;
+
+    # Battery has been reconnected
+    battattach)
+        log "INFO: Battery has been reconnected"
+        ;;
+
+    # Communication with UPS restored
+    commok)
+        log "INFO: Communication with UPS restored"
+        ;;
+
+    # Communication with UPS lost
+    commfailure)
+        log "ALERT: Communication with UPS lost"
+        ;;
+
+    # Unknown/other events
+    *)
+        log "EVENT: $1 (unhandled)"
+        ;;
+esac
+
+# Always exit 0 to let apcupsd continue
+exit 0
