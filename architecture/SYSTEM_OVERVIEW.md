@@ -27,6 +27,7 @@ Your Lightning node is the financial foundation. It:
 
 **Options:**
 - **Self-hosted LND** on your own hardware (most sovereign)
+- **Core Lightning (CLN)** - Alternative implementation, lighter weight
 - **BTCPay's built-in node** on your VPS (simpler setup)
 
 **Key considerations:**
@@ -44,7 +45,7 @@ BTCPay Server is the glue between your app and your node:
 
 **Deployment:**
 - Docker container on a VPS (~$20/month)
-- Pruned Bitcoin node uses only ~25GB
+- Pruned Bitcoin node uses significantly less than full node (~600GB+)
 - Connects to your Lightning node over encrypted tunnel
 
 ### Layer 3: Web Application (Interface)

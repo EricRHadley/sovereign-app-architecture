@@ -36,7 +36,11 @@ sudo apt install git nodejs npm python3 ffmpeg
 
 ### Option A: Self-Hosted LND (Most Sovereign)
 
-**Hardware**: Any always-on computer (old laptop, Raspberry Pi 4+, server hardware)
+**Hardware**: Any always-on computer
+- Raspberry Pi 5 (8GB) - Pi 4 is now underpowered for full Bitcoin node
+- Mini PC (Intel N100, NUC, etc.)
+- Old laptop or desktop
+- Server hardware
 
 **Software**:
 - Bitcoin Core (full or pruned node)
@@ -70,6 +74,52 @@ Everything on one VPS. Simpler but less sovereign.
 - VPS provider has access to your node
 - Higher VPS requirements
 - Less separation of concerns
+
+### Option C: Easier Starting Points
+
+If self-hosting feels overwhelming, consider starting with:
+- **[Umbrel](https://umbrel.com)** or **[Start9](https://start9.com)** - Node-in-a-box solutions with great UIs
+- **[Voltage](https://voltage.cloud)** - Hosted LND nodes (you hold keys)
+
+See [Sovereignty Spectrum](SOVEREIGNTY_SPECTRUM.md) for the full range of options.
+
+### Channel Management Basics
+
+Before you can receive Lightning payments, you need **inbound liquidity** - sats on the remote side of your channels.
+
+**Opening Channels:**
+```bash
+# Fund your LND wallet first
+lncli newaddress p2wkh
+# Send Bitcoin to this address, wait for confirmations
+
+# Open a channel (find peers at 1ml.com or amboss.space)
+lncli openchannel --node_key=<peer_pubkey> --local_amt=500000
+```
+
+**Getting Inbound Liquidity:**
+
+This is the #1 operational challenge for Lightning merchants:
+
+| Method | Description | Cost |
+|--------|-------------|------|
+| Lightning Loop | Submarine swaps (Lightning → on-chain) | ~0.1-0.5% |
+| Ask peers | Request others open channels to you | Free (favors) |
+| Liquidity marketplaces | Magma, Pool | Variable |
+| Dual-funded channels | Both parties contribute | Requires CLN or recent LND |
+
+**How Much Do You Need?**
+
+- Start with 500K-1M sats inbound for testing
+- Scale based on expected daily payment volume × 3-7 days buffer
+- Monitor with: `lncli listchannels | jq '.channels[] | {alias: .peer_alias, local: .local_balance, remote: .remote_balance}'`
+
+**When Channels Get Unbalanced:**
+
+After receiving many payments, your channels fill up (high local, low remote). Options:
+- **Loop Out**: Move sats to on-chain, restoring inbound capacity
+- **Circular rebalance**: Pay yourself through other channels
+- **Spend**: Actually use your Lightning sats
 
 ---
 

@@ -42,6 +42,7 @@ sovereign-app-architecture/
 ├── guides/
 │   ├── GETTING_STARTED.md      # The shopping list
 │   ├── BTCPAY_SETUP.md         # Quick BTCPay configuration
+│   ├── SOVEREIGNTY_SPECTRUM.md # Custodial → Self-hosted options
 │   └── UPS_AND_GRACEFUL_SHUTDOWN.md  # Power protection & recovery
 ├── scripts/
 │   └── ups-integration/        # Ready-to-use UPS scripts
@@ -79,6 +80,18 @@ The patterns here aren't theoretical. They're production-tested.
 **Builders** looking for a blueprint to ship their own sovereign app.
 
 **Developers** curious about AI-assisted development workflows.
+
+---
+
+## Who This Is NOT For
+
+**Not ideal if:**
+- You need 99.99% uptime SLAs (use managed services instead)
+- Your team has zero technical capability
+- Regulatory compliance requires custodians
+- You need something working in hours, not weeks
+
+**Start simpler with:** [Sovereignty Spectrum](guides/SOVEREIGNTY_SPECTRUM.md) - from custodial to fully sovereign, choose your path.
 
 ---
 

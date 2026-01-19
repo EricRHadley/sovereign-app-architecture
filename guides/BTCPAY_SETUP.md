@@ -42,6 +42,7 @@ export BTCPAY_HOST="btcpay.yourdomain.com"
 export NBITCOIN_NETWORK="mainnet"
 export BTCPAYGEN_CRYPTO1="btc"
 export BTCPAYGEN_LIGHTNING="lnd"
+# Alternative: export BTCPAYGEN_LIGHTNING="clightning" for Core Lightning
 export LETSENCRYPT_EMAIL="you@email.com"
 
 # Use pruned node to reduce storage footprint
@@ -57,12 +58,20 @@ export BTCPAYGEN_ADDITIONAL_FRAGMENTS="opt-save-storage-xs"
 
 The Bitcoin node needs to sync with the network. This takes time.
 
+**Expected sync time:**
+- Fresh node: 2-7 days depending on hardware and internet
+- Pruned node: Still processes all blocks, just doesn't store them all
+- Don't proceed until sync is 100% complete
+
 ```bash
 # Check sync progress
 docker logs -f btcpayserver_bitcoind
 
 # Check disk usage during sync
 df -h
+
+# Check sync percentage (look for "progress=")
+docker exec btcpayserver_bitcoind bitcoin-cli getblockchaininfo | grep verificationprogress
 ```
 
 ---
@@ -96,6 +105,13 @@ openssl x509 -noout -fingerprint -sha256 -in ~/.lnd/tls.cert
 ```
 type=lnd-rest;server=https://your-node-ip:8080/;macaroon=HEX;certthumbprint=FINGERPRINT
 ```
+
+**Security Warning**: Exposing LND's REST interface over the public internet is risky. Prefer:
+- SSH tunnel between BTCPay and your LND node
+- VPN between servers
+- Private network if same provider
+
+Never expose LND ports (8080, 10009) publicly without additional protection.
 
 ---
 

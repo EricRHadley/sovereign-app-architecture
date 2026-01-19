@@ -149,9 +149,11 @@ The token rides along with segment requests. Your middleware validates the signa
 
 | Tier | Price | Duration | Use Case |
 |------|-------|----------|----------|
-| 24-hour | 100 sats (~$0.10) | 24 hours | Impulse view |
-| Forever | 3,000 sats (~$3.00) | Permanent | Collectors |
-| Streaming | 1 sat/segment | Pay-per-view | Future option |
+| 24-hour | ~100 sats | 24 hours | Impulse view |
+| Forever | ~3,000 sats | Permanent | Collectors |
+| Streaming | ~1 sat/segment | Pay-per-view | Future option |
+
+*Sat amounts are examples. Adjust based on your content value and market.*
 
 Pricing is configurable per video or globally.
 
