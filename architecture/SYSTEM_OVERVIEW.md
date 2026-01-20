@@ -128,6 +128,54 @@ User requests video → Token validated → Segments served
 
 ---
 
+## Design Philosophy: Zero Operational Overhead
+
+One-person operations require ruthless simplicity. AI can help you build software, but it can't staff a support desk or moderate comments. The architecture must eliminate those needs.
+
+### The Goal: Support Organization of ZERO
+
+Every design choice asks: "Does this add operational burden?"
+
+| Choice | What It Eliminates |
+|--------|-------------------|
+| **Hash-based video IDs** | Database lookups, ID mapping tables. The hash IS the file path. |
+| **Payment proof = authentication** | User accounts, password recovery, "forgot my login" support tickets |
+| **No email collection** | GDPR/CCPA compliance, mailing list management, breach liability |
+| **No comments** | Moderation queue, abuse reports, community management |
+| **Curated content model** | User-generated content moderation, DMCA processing |
+| **Stateless tokens** | Session storage, session scaling, server-side state management |
+
+### Hash-Based Identification
+
+Videos are identified by content hash (e.g., `c05f2318`), not sequential database IDs.
+
+```
+/videos/c05f2318/
+  ├── master.m3u8
+  ├── 720p/
+  └── thumbnail.jpg
+```
+
+**Why this matters:**
+- No database lookup to map ID → file path
+- The hash IS the path - pure filesystem operation
+- Scales infinitely without database bottlenecks
+- Works across systems (API, filesystem, tokens) with one identifier
+
+### Stateless Authentication at Scale
+
+Traditional auth: User logs in → Server creates session → Server stores session → Every request checks session store.
+
+Stateless auth: User pays → Server signs a token → User stores token → Every request includes token → Server validates signature (math, not lookup).
+
+**The difference at scale:**
+- Session-based: 10,000 users = 10,000 session records to query
+- Stateless: 10,000 users = 0 records to query (just signature math)
+
+You can serve unlimited concurrent users without scaling your "session database" because there isn't one.
+
+---
+
 ## Key Architectural Decisions
 
 ### 1. Stateless Authentication
