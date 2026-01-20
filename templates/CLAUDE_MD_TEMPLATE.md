@@ -39,6 +39,44 @@ Brief description of what this project does.
 - Always update cache-busting versions when modifying CSS/JS
 - Always use the git workflow for deployment
 
+### Why These Rules Exist (Document Past Incidents)
+
+Rules without context get ignored. Document real incidents:
+
+```markdown
+**Database Overwrite Incident**: videos.json was tracked in git. Claude
+edited local copy and pushed, overwriting all live production data.
+→ RULE: Live data files (.json databases) must be in .gitignore
+→ RULE: Use API endpoints or migration scripts to update live data
+→ RULE: Never git push files that contain production state
+```
+
+Turn every mistake into a documented rule. Future sessions will understand why the rule exists.
+
+## Plan Files & Context Management
+
+AI assistants have limited context windows. Plan files are your external memory.
+
+### Creating Plans
+For complex tasks, create a plan file:
+```
+"Let's make a plan for setting up BTCPay. Write it to docs/btcpay-setup-plan.md"
+```
+
+### Resuming Work
+When starting a new session:
+```
+"Read docs/btcpay-setup-plan.md and continue where we left off"
+```
+
+### What Goes in Plan Files
+- Task breakdown and progress tracking
+- Decisions made and why
+- Issues encountered and solutions
+- Next steps
+
+Plan files survive context resets. They ARE your project memory.
+
 ## Development Workflow
 
 1. Edit files locally in `~/project-name/`
@@ -60,6 +98,25 @@ Brief description of what this project does.
 ### What Claude Cannot Access
 - Payment infrastructure (BTCPay, Lightning node)
 - Database servers directly
+
+### Lightning Node Safety (If Applicable)
+
+If your project includes a Lightning node:
+
+**NEVER do these:**
+- Use `sudo` on the Lightning node - can corrupt wallet/database
+- Run commands that transfer funds without explicit user approval
+- Expose LND ports (8080, 10009) directly to the internet
+
+**Safe commands (read-only):**
+- `lncli getinfo`, `lncli listchannels`, `lncli walletbalance`
+- `lncli listpeers`, `lncli pendingchannels`
+
+**Dangerous commands (require explicit approval):**
+- `lncli openchannel`, `lncli closechannel`
+- `lncli sendpayment`, `lncli sendcoins`
+- Any command with `--force` flags
+- `loop out`, `loop in`
 
 ## Key Concepts
 
