@@ -60,16 +60,11 @@ sovereign-app-architecture/
 
 ## The Origin Story
 
-This architecture powered [Hyperdope](https://hyperdope.com), a Bitcoin-native video platform built by one person in three months using AI-assisted development.
+This architecture powered [Hyperdope](https://hyperdope.com), a Bitcoin-native video platform.
 
-**Key metrics:**
-- 848 commits
-- 128k+ lines of code
-- 227 videos monetized
-- 6,000+ sats processed
-- Zero user accounts
+**Built by one person in three months using AI-assisted development.**
 
-The patterns here aren't theoretical. They're production-tested.
+The patterns here aren't theoretical - they're running in production. Try it yourself: unlock a video with Lightning and see what "no accounts, no signup" actually feels like.
 
 ---
 
@@ -80,6 +75,24 @@ The patterns here aren't theoretical. They're production-tested.
 **Builders** looking for a blueprint to ship their own sovereign app.
 
 **Developers** curious about AI-assisted development workflows.
+
+---
+
+## Zero Support Architecture
+
+Every design choice asks: "Does this add operational burden?"
+
+| Choice | What It Eliminates |
+|--------|-------------------|
+| **Payment proof = authentication** | User accounts, password recovery, support tickets |
+| **No email collection** | GDPR compliance, breach liability |
+| **No comments** | Moderation queue, abuse reports |
+| **Stateless tokens** | Session storage, database scaling |
+| **Hash-based IDs** | Database lookups - the hash IS the file path |
+
+**The goal**: A support organization of zero. AI can help you build software, but it can't staff a support desk. The architecture must eliminate that need.
+
+See [System Overview](architecture/SYSTEM_OVERVIEW.md#design-philosophy-zero-operational-overhead) for details.
 
 ---
 
@@ -97,10 +110,11 @@ This approach requires:
 
 ## Quick Start
 
-1. **Try it**: Visit [hyperdope.com](https://hyperdope.com) and unlock a video with Lightning
-2. **Learn**: Read the [System Overview](architecture/SYSTEM_OVERVIEW.md)
-3. **Build**: Follow the [Getting Started Guide](guides/GETTING_STARTED.md)
-4. **Protect**: Set up [UPS & Graceful Shutdown](guides/UPS_AND_GRACEFUL_SHUTDOWN.md) for your node
+1. **Explore**: See the [Architecture Overview](https://hyperdope.com/architecture.html) for visual diagrams
+2. **Try it**: Visit [hyperdope.com](https://hyperdope.com) and unlock a video with Lightning
+3. **Learn**: Read the [System Overview](architecture/SYSTEM_OVERVIEW.md)
+4. **Build**: Follow the [Getting Started Guide](guides/GETTING_STARTED.md)
+5. **Protect**: Set up [UPS & Graceful Shutdown](guides/UPS_AND_GRACEFUL_SHUTDOWN.md) for your node
 
 ---
 
