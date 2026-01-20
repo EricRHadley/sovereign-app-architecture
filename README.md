@@ -70,11 +70,13 @@ The patterns here aren't theoretical - they're running in production. Try it you
 
 ## Who This Is For
 
-**Creators** who want to own their platform and keep 100% of payments.
+**You want to control your own platform** - Your content decisions. Your algorithm. Your rules. Not theirs.
 
-**Builders** looking for a blueprint to ship their own sovereign app.
+**You want sovereign payment rails** - Direct Lightning payments, no payment processor taking 30% or deciding you're "high risk." Keep 100% of what you earn.
 
-**Developers** curious about AI-assisted development workflows.
+**You've been deplatformed** - or you see it coming. You need infrastructure that doesn't depend on anyone's permission.
+
+**You thought you couldn't build this alone** - No engineering team. No funding. But with AI-assisted development, the barrier is lower than you think.
 
 ---
 
