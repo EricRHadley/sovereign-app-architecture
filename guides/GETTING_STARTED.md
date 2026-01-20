@@ -214,8 +214,9 @@ sudo certbot --apache -d yourdomain.com
 
 ---
 
-## Monthly Cost Breakdown
+## Cost Breakdown
 
+### Monthly Infrastructure
 | Component | Cost |
 |-----------|------|
 | Web Server VPS | $40-80 |
@@ -224,11 +225,16 @@ sudo certbot --apache -d yourdomain.com
 | VPS Backups | $10-20 |
 | Domain | ~$12/year |
 | Lightning Node | $0 (self-hosted) |
-| **Total** | **Under $200/month** |
+| **Total** | **~$150-200/month** |
 
-Costs vary by provider and storage needs. The point: it's cheap enough to experiment.
+### Channel Capital (One-time, Recoverable)
+Lightning channels require locked funds for liquidity:
+- **Minimum to start**: 500K-1M sats
+- **Production level**: 5-15M sats typical
+- **This is an investment, not a cost** - funds are recoverable when channels close
 
-**Break-even**: A few hundred paying users covers infrastructure.
+### Break-even
+Infrastructure costs are low enough that a few hundred paying users covers monthly expenses. The real investment is your time and channel capital.
 
 ---
 
@@ -245,26 +251,35 @@ Costs vary by provider and storage needs. The point: it's cheap enough to experi
 
 ## First Steps
 
-### Day 1: Install Claude Code
+### Getting Started: Install Claude Code
 Get comfortable with the agentic workflow. Try:
 - "Create a new folder called test"
 - "Create a simple HTML page"
 - "Add some CSS styling"
 
-### Week 1: Set Up Infrastructure
+### Realistic Timeline
+
+Building a production sovereign app typically takes **2-3 months** with AI-assisted development:
+
+**Phase 1: Infrastructure** (1-2 weeks)
 - Provision VPS instances
-- Install BTCPay Server
-- Get SSL certificates
+- Install BTCPay Server, wait for sync
+- Configure SSL, domains, firewalls
 
-### Week 2: Build Your MVP
-- Create basic frontend
-- Implement payment flow
-- Test with small amounts
+**Phase 2: Payment Integration** (3-4 weeks)
+- BTCPay API integration
+- Token generation and validation
+- Content protection (if applicable)
 
-### Week 3+: Iterate
-- Add features based on user feedback
-- Refine the experience
-- Scale as needed
+**Phase 3: Hardening** (2-4 weeks)
+- Testing with real payments
+- Security review
+- UPS, backups, monitoring setup
+
+**Phase 4: Launch + Operations** (ongoing)
+- Channel management and liquidity
+- Content creation
+- Iterate based on usage
 
 ---
 

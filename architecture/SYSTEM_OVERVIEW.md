@@ -140,13 +140,15 @@ Tokens contain all information needed to verify access:
 
 Server validates by checking signature. No database lookup required.
 
-### 2. No User Accounts
+### 2. Stateless Authentication (Optional)
 
-Benefits:
+If your app doesn't need user accounts, Lightning payments enable a clean alternative:
 - Can't leak data you don't collect
 - No password breach liability
 - No GDPR/CCPA compliance burden
 - Zero account creation friction
+
+This is a design choice, not a requirement. Sovereign apps can use accounts if needed.
 
 ### 3. Separation of Concerns
 
@@ -156,9 +158,9 @@ Compromise of one doesn't compromise all.
 
 ### 4. Portable Infrastructure
 
-Everything runs on standard VPS providers.
+Web layer runs on commodity VPS providers - replaceable if one becomes hostile.
 Migration to different provider takes hours, not weeks.
-No vendor lock-in.
+Payment layer (Lightning node) is self-hosted for true sovereignty.
 
 ---
 
@@ -171,7 +173,9 @@ No vendor lock-in.
 | Block Storage | $20-50 |
 | VPS Backups | $10-20 |
 | Lightning Node | $0 (self-hosted) or VPS cost |
-| **Total** | **Under $200/month** |
+| **Total** | **~$150-200/month** |
+
+**Plus channel capital**: Lightning channels require locked funds (typically 5-15M sats for production). This is recoverable when channels close - an investment, not a recurring cost.
 
 Break-even at a few hundred paying users.
 

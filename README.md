@@ -9,7 +9,7 @@
 A sovereign app is software you fully control:
 
 - **Your payment rails** - You run your own Lightning node
-- **Your infrastructure** - VPS you can migrate in hours
+- **Portable infrastructure** - Standard VPS, migrate in hours, no vendor lock-in
 - **No user accounts** - No data to protect or leak
 - **Open source stack** - Every layer is transparent
 - **No permission needed** - Publish what you want, accept payments from anyone
@@ -28,7 +28,7 @@ Not an app that asks permission. An app that doesn't need it.
 | **Hosting** | Any VPS provider | Portable, migratable |
 | **Development** | Claude Code | AI-assisted building |
 
-**Total cost**: Under $200/month for complete infrastructure
+**Infrastructure**: ~$150-200/month + channel capital (recoverable investment)
 
 ---
 
@@ -83,15 +83,15 @@ The patterns here aren't theoretical. They're production-tested.
 
 ---
 
-## Who This Is NOT For
+## Trade-offs to Consider
 
-**Not ideal if:**
-- You need 99.99% uptime SLAs (use managed services instead)
-- Your team has zero technical capability
-- Regulatory compliance requires custodians
-- You need something working in hours, not weeks
+This approach requires:
+- **Operational responsibility** - You maintain the infrastructure (UPS, backups, monitoring)
+- **Learning curve** - Comfort with Linux, Bitcoin, Lightning, and APIs
+- **Capital commitment** - Beyond infrastructure costs, Lightning channels require locked funds (typically 1-10M sats)
+- **Time investment** - Production system typically takes 2-3 months with AI-assisted development
 
-**Start simpler with:** [Sovereignty Spectrum](guides/SOVEREIGNTY_SPECTRUM.md) - from custodial to fully sovereign, choose your path.
+**Not sure?** [Sovereignty Spectrum](guides/SOVEREIGNTY_SPECTRUM.md) covers the full range from custodial to fully sovereign - choose your starting point.
 
 ---
 
