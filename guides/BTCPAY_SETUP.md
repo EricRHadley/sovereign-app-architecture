@@ -106,12 +106,133 @@ openssl x509 -noout -fingerprint -sha256 -in ~/.lnd/tls.cert
 type=lnd-rest;server=https://your-node-ip:8080/;macaroon=HEX;certthumbprint=FINGERPRINT
 ```
 
-**Security Warning**: Exposing LND's REST interface over the public internet is risky. Prefer:
-- SSH tunnel between BTCPay and your LND node
-- VPN between servers
-- Private network if same provider
+**Security Warning**: Never expose LND ports (8080, 10009) directly to the public internet.
 
-Never expose LND ports (8080, 10009) publicly without additional protection.
+### Connectivity Options
+
+The challenge: BTCPay on a VPS needs to securely reach LND on your home network. Your home IP is probably dynamic, and you don't want to expose it anyway. Here are your options:
+
+#### Option A: All-in-One at Home (Simplest Architecture)
+
+Run BTCPay and LND on the same machine. Everything talks over localhost.
+
+**Umbrel/Start9**: These bundle BTCPay + LND together. Install the BTCPay app from their app store. Done. Access via Tor onion address or their tunnel services.
+
+**Manual**: Install BTCPay Docker on your Lightning node machine. Same setup as above, but `your-node-ip` is `localhost`.
+
+**Trade-offs**:
+- ✅ No network complexity
+- ✅ Everything on one box
+- ⚠️ Need to expose BTCPay web interface (Tor, dynamic DNS, or tunnel)
+- ⚠️ Tor can be slow for customers
+
+#### Option B: Tailscale (Easiest for Separate Machines)
+
+Tailscale creates a private mesh network between your machines. BTCPay connects to LND via Tailscale IP.
+
+```bash
+# On both BTCPay VPS and Lightning node:
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up
+
+# Get the Tailscale IP of your Lightning node:
+tailscale ip -4
+# Example: 100.x.y.z
+```
+
+**In BTCPay**, use the Tailscale IP:
+```
+type=lnd-rest;server=https://100.x.y.z:8080/;macaroon=HEX;certthumbprint=FINGERPRINT
+```
+
+**Trade-offs**:
+- ✅ Very easy setup
+- ✅ No port forwarding, no static IP needed
+- ✅ Works through NAT and firewalls
+- ⚠️ Depends on Tailscale service (free tier available)
+
+#### Option C: Reverse SSH Tunnel (No External Dependencies)
+
+Your home node initiates an outbound SSH connection to a relay server. BTCPay connects to the relay, which forwards to your node.
+
+**Architecture**:
+```
+[BTCPay VPS] ----> [Tunnel Server :8080] <==== [Home LND Node]
+                   (public IP)            (reverse SSH tunnel)
+```
+
+**Setup on tunnel server** (any cheap VPS with a static IP):
+```bash
+# Enable GatewayPorts in /etc/ssh/sshd_config
+GatewayPorts yes
+sudo systemctl restart sshd
+```
+
+**Setup on home Lightning node**:
+```bash
+# Install autossh for persistent tunnels
+sudo apt install autossh
+
+# Create systemd service: /etc/systemd/system/lightning-tunnel.service
+[Unit]
+Description=Lightning SSH Tunnel
+After=network.target
+
+[Service]
+Type=simple
+User=youruser
+ExecStart=/usr/bin/autossh -M 0 -N \
+  -o ServerAliveInterval=30 \
+  -o ServerAliveCountMax=3 \
+  -o ExitOnForwardFailure=yes \
+  -R 8080:localhost:8080 \
+  -R 10009:localhost:10009 \
+  tunnel-user@tunnel-server-ip
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+# Enable and start
+sudo systemctl enable lightning-tunnel
+sudo systemctl start lightning-tunnel
+```
+
+**In BTCPay**, connect to the tunnel server:
+```
+type=lnd-rest;server=https://tunnel-server-ip:8080/;macaroon=HEX;certthumbprint=FINGERPRINT
+```
+
+**Trade-offs**:
+- ✅ No external dependencies (just SSH)
+- ✅ Home IP stays private
+- ✅ Works through any NAT/firewall
+- ⚠️ Requires a second VPS as relay (~$5/month)
+- ⚠️ More setup complexity
+
+#### Option D: WireGuard VPN (Self-Hosted)
+
+Similar to Tailscale but self-hosted. Create a VPN between BTCPay VPS and home node.
+
+**Trade-offs**:
+- ✅ No external dependencies
+- ✅ Very performant
+- ⚠️ More complex setup than Tailscale
+- ⚠️ Need to manage keys and configs yourself
+
+See the [WireGuard Quick Start](https://www.wireguard.com/quickstart/) for setup instructions.
+
+### Which Should You Choose?
+
+| Situation | Recommendation |
+|-----------|----------------|
+| Just starting out | Umbrel/Start9 (all-in-one) |
+| Want separate VPS for BTCPay | Tailscale (easiest) |
+| Want zero external dependencies | Reverse SSH tunnel |
+| Already use WireGuard | WireGuard |
+
+**AI-assisted setup**: All of these options are well-documented. Claude Code can walk you through any of them step by step.
 
 ---
 
