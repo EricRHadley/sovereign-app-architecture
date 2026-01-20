@@ -10,7 +10,7 @@ A sovereign app is software you fully control:
 
 - **Your payment rails** - You run your own Lightning node
 - **Portable infrastructure** - Standard VPS, migrate in hours, no vendor lock-in
-- **No user accounts** - No data to protect or leak
+- **Accounts optional** - No-KYC payments with instant settlement enable stateless auth
 - **Open source stack** - Every layer is transparent
 - **No permission needed** - Publish what you want, accept payments from anyone
 
